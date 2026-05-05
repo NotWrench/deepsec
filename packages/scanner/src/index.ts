@@ -112,7 +112,8 @@ export class RegexScannerDriver implements ScannerDriver {
         nodir: true,
         absolute: false,
       });
-      globCache.set(key, files);
+      const posixPaths = files.map((p) => p.replace(/\\/g, "/"));
+      globCache.set(key, posixPaths);
       yield {
         type: "matcher_done" as const,
         message: `Found ${files.length} files`,
