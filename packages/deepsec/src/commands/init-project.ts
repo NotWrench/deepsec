@@ -56,7 +56,9 @@ export function registerProject(opts: {
   const workspaceDir = fs.realpathSync(path.resolve(opts.workspaceDir));
   const targetAbs = requireExistingDir(opts.targetRoot, "<target-root>");
   const id = validateProjectId(opts.id ?? path.basename(targetAbs));
-  const targetRel = path.relative(workspaceDir, targetAbs);
+  // Always POSIX `root:` in deepsec.config.ts so scaffolds match across OS
+  // and tools that consume the file see a single separator convention.
+  const targetRel = path.relative(workspaceDir, targetAbs).split(path.sep).join("/");
 
   const configPath = findConfigInWorkspace(workspaceDir);
   if (!configPath) {
